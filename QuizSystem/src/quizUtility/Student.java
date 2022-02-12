@@ -11,4 +11,13 @@ public class Student extends User {
 		
 	}
 	
+	public String getUserName() {
+	   return this.userName;	
+	}
+	
+	public String getDepartment() {
+	
+		return this.department;
+	}
+	
 }

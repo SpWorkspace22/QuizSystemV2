@@ -17,6 +17,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import quizUtility.Faculty;
 import quizUtility.Student;
 import quizUtility.User;
 
@@ -29,7 +30,9 @@ public class QuizMain extends JFrame  implements ActionListener{
 	private JButton student;
 	private JButton faculty;
 
-	private User quizUser;
+	private Student stu;
+	private Faculty fac;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -55,7 +58,7 @@ public class QuizMain extends JFrame  implements ActionListener{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1116, 575);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(248, 248, 255));
+		contentPane.setBackground(new Color(255, 250, 240));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -116,20 +119,20 @@ public class QuizMain extends JFrame  implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
        if(e.getSource()==faculty) {
-    	   System.out.println("Faculty");
+
     	   if(checkUserName()) {
    			JOptionPane.showMessageDialog(null, "Please Enter User Name", "User Name Error", JOptionPane.ERROR_MESSAGE);
     	   }
        }else{
-    	   System.out.println("student");
+
     	   if(checkUserName()) {
    			JOptionPane.showMessageDialog(null, "Please Enter User Name", "User Name Error", JOptionPane.ERROR_MESSAGE);
     	   }else {
-        	   quizUser = new Student();
-        	   quizUser.initializeUser(departmnetChooser.getItemAt(departmnetChooser.getSelectedIndex()).toString(),
+        	   stu = new Student();
+        	   stu.initializeUser(departmnetChooser.getItemAt(departmnetChooser.getSelectedIndex()).toString(),
         			   userName.getText());
         	   this.setVisible(false);
-        	   new StuentScreen(quizUser).setVisible(true);
+        	   new StuentScreen(stu).setVisible(true);
     	   }
        }
 	}
