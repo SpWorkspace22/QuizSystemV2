@@ -8,22 +8,27 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import quizUtility.FileOperations;
+import quizUtility.QuestionAnswer;
 import quizUtility.Student;
 import quizUtility.User;
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
 
-public class StuentScreen extends JFrame {
+public class StuentScreen extends JFrame implements ActionListener{
 
 	private JComboBox paperList;
 	
 	private JPanel contentPane;
     private Student user;
     private FileOperations fileOp;
+    private QuestionAnswer questionAnswer;
 	/**
 	 * Create the frame.
 	 */
@@ -60,6 +65,7 @@ public class StuentScreen extends JFrame {
 		btnNewButton.setBackground(new Color(255, 250, 250));
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton.setBounds(859, 474, 208, 25);
+		btnNewButton.addActionListener(this);
 		contentPane.add(btnNewButton);
 		
 		JLabel guidelies = new JLabel(guidelies());
@@ -80,6 +86,17 @@ public class StuentScreen extends JFrame {
 		String guideline = "<html>Guidelines For Quiz<br><br>1: Each Question is of 1: Points<br><br>2: Next Button Will Show you the next question<br><br>"+
 							"3: Going to previous question is not possible<br><br></html>";
 		return guideline;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		questionAnswer = fileOp.preparePapers(user.getDepartment(),
+				paperList.getItemAt(paperList.getSelectedIndex()).toString());
+		
+		this.setVisible(false);
+		new QuizPage(questionAnswer,user).setVisible(true);
+		
 	}
 
 }
