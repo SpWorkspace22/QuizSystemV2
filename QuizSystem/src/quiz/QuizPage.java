@@ -1,29 +1,26 @@
 package quiz;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
 
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import quizUtility.QuestionAnswer;
 import quizUtility.Student;
 
-import javax.swing.JLabel;
-import java.awt.Font;
-import java.awt.HeadlessException;
-import java.util.ArrayList;
-
-import javax.swing.JSeparator;
-import javax.swing.JScrollPane;
-import javax.swing.JRadioButton;
-import javax.swing.SwingConstants;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import java.awt.Color;
-
-public class QuizPage extends JFrame {
+public class QuizPage extends JFrame implements ActionListener{
 
 	private JPanel contentPane;
 	
@@ -36,6 +33,7 @@ public class QuizPage extends JFrame {
 	
 	private JButton nextQuestion;
 	private JButton submitTest;
+	private ButtonGroup btnGroup;
 	
 	
 	private QuestionAnswer questionAnswers;
@@ -43,7 +41,10 @@ public class QuizPage extends JFrame {
 
 	private Object questionList[];
 	private ArrayList<String> optionList;
+	private HashMap<String,String> userResponse;
+	private int questionCounter;
 	/**
+	 * 
 	 * Create the frame.
 	 */
 	public QuizPage(QuestionAnswer questionAnswers, Student user) {
@@ -96,6 +97,7 @@ public class QuizPage extends JFrame {
 		
 		nextQuestion = new JButton("Next");
 		nextQuestion.setBounds(848, 308, 238, 27);
+		nextQuestion.addActionListener(this);
 		contentPane.add(nextQuestion);
 		
 		JSeparator separator_1 = new JSeparator();
@@ -104,13 +106,16 @@ public class QuizPage extends JFrame {
 		
 		submitTest = new JButton("Submit Test");
 		submitTest.setBounds(848, 414, 238, 25);
+		submitTest.addActionListener(this);
 		contentPane.add(submitTest);
 	
 		
 		this.questionAnswers = questionAnswers;
 		this.user = user;
+		userResponse = new HashMap<String, String>();
 		
 		questionList = null;
+		questionCounter = 0;
 		
 		initDataAndScreen();
 	}
@@ -118,20 +123,71 @@ public class QuizPage extends JFrame {
 	private void initDataAndScreen() {
 		headLabel.setText("Welcome "+user.getUserName()+" !!!");
 		
-		ButtonGroup btnGroup = new ButtonGroup();
+		btnGroup = new ButtonGroup();
 		btnGroup.add(optionA);
 		btnGroup.add(optionB);
 		btnGroup.add(optionC);
 		btnGroup.add(optionD);
 		
 		questionList = questionAnswers.getQuestionOptionLists().keySet().toArray();
-		optionList = questionAnswers.getQuestionOptionLists().get(questionList[0]);
+		optionList = questionAnswers.getQuestionOptionLists().get(questionList[questionCounter]);
 		
-		questionLabel.setText(questionList[0].toString());
+		questionLabel.setText(questionList[questionCounter].toString());
 		optionA.setText(optionList.get(0));
+		optionA.setActionCommand(optionList.get(0));
 		optionB.setText(optionList.get(1));
+		optionB.setActionCommand(optionList.get(1));
 		optionC.setText(optionList.get(2));
+		optionC.setActionCommand(optionList.get(2));
 		optionD.setText(optionList.get(3));
+		optionD.setActionCommand(optionList.get(3));
+		
+		questionCounter++;
+	}
+
+	private void setNextQuestion() {
+		
+			optionList.clear();
+			optionList = questionAnswers.getQuestionOptionLists().get(questionList[questionCounter]);
+			
+			questionLabel.setText(questionList[questionCounter].toString());
+			optionA.setText(optionList.get(0));
+			optionA.setActionCommand(optionList.get(0));
+			optionB.setText(optionList.get(1));
+			optionB.setActionCommand(optionList.get(1));
+			optionC.setText(optionList.get(2));
+			optionC.setActionCommand(optionList.get(2));
+			optionD.setText(optionList.get(3));
+			optionD.setActionCommand(optionList.get(3));
+			
+
+			if(questionCounter==(questionList.length-1)) {
+				nextQuestion.setEnabled(false);
+			}
+	}
+	
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource() ==nextQuestion) {
+			try{
+			      userResponse.put(questionLabel.getText(),btnGroup.getSelection().getActionCommand());
+			      btnGroup.clearSelection();
+
+			}catch(NullPointerException ex) {
+				userResponse.put(questionLabel.getText(),"");
+			}finally {
+				setNextQuestion();
+				questionCounter++;
+			}
+		}else {
+		    userResponse.put(questionLabel.getText(),btnGroup.getSelection().getActionCommand());
+		    int score = questionAnswers.check(userResponse);
+			
+		    this.setVisible(false);
+		    new SummaryScreen(user.getUserName(), score, questionList.length).setVisible(true);;
+		}
 	}
 	
 }

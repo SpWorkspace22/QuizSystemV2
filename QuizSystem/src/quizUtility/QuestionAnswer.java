@@ -2,6 +2,8 @@ package quizUtility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class QuestionAnswer {
 
@@ -33,8 +35,15 @@ public class QuestionAnswer {
 		return String.valueOf(questionOption.size());
 	}
 	
-	public String check() {
-		return null;
+	public int check(HashMap<String,String> userResponse) {
+		int count = 0;
+		
+		for(Map.Entry<String, String> entry : userResponse.entrySet()) {
+			if(questionAnswer.get(entry.getKey()).equals(userResponse.get(entry.getKey()))){
+				count++;
+			}
+		}
+		return count;
 	}
 }
 
