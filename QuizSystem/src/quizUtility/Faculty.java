@@ -10,4 +10,14 @@ public class Faculty extends User {
 		this.department = departmentName;
 		this.userName = user;
 	}
+	
+	public String getUserName() {
+		   return this.userName;	
+	}
+		
+	public String getDepartment() {
+			return this.department;
+	}
 }
+
+

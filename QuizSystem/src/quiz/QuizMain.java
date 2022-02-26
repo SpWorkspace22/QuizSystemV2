@@ -20,6 +20,7 @@ import javax.swing.border.EmptyBorder;
 import quizUtility.Faculty;
 import quizUtility.Student;
 import quizUtility.User;
+import javax.swing.SwingConstants;
 
 
 public class QuizMain extends JFrame  implements ActionListener{
@@ -102,15 +103,21 @@ public class QuizMain extends JFrame  implements ActionListener{
 		
 		ImageIcon teacherIcon = new ImageIcon("src/icons/teacher.png");
 		faculty = new JButton(teacherIcon);
+		faculty.setHorizontalAlignment(SwingConstants.LEFT);
+		faculty.setVerticalAlignment(SwingConstants.BOTTOM);
+		faculty.setText("Faculty");
 		faculty.setBackground(new Color(255, 250, 250));
-		faculty.setBounds(616, 350, 128, 108);
+		faculty.setBounds(578, 359, 222, 129);
 		faculty.addActionListener(this);
 		contentPane.add(faculty);
 		
 		ImageIcon studentIcon = new ImageIcon("src/icons/reading.png");
 		student = new JButton(studentIcon);
+		student.setHorizontalAlignment(SwingConstants.LEFT);
+		student.setVerticalAlignment(SwingConstants.BOTTOM);
+		student.setText("Student");
 		student.setBackground(new Color(255, 250, 250));
-		student.setBounds(837, 350, 120, 108);
+		student.setBounds(831, 359, 222, 129);
 		student.addActionListener(this);
 		contentPane.add(student);
 		
@@ -122,6 +129,12 @@ public class QuizMain extends JFrame  implements ActionListener{
 
     	   if(checkUserName()) {
    			JOptionPane.showMessageDialog(null, "Please Enter User Name", "User Name Error", JOptionPane.ERROR_MESSAGE);
+    	   }else {
+    		   fac = new Faculty();
+    		   fac.initializeUser(departmnetChooser.getItemAt(departmnetChooser.getSelectedIndex()).toString(),
+        			   userName.getText());
+        	   this.setVisible(false);
+        	   new FacultyQuestionPaper(fac).setVisible(true);
     	   }
        }else{
 
