@@ -10,6 +10,7 @@ public class QuestionAnswer {
 	private HashMap<String,ArrayList<String>> questionOption; 
 	private HashMap<String,String> questionAnswer;
 	private ArrayList<String> optionList;
+	
 	public QuestionAnswer(){
 		optionList = new ArrayList<String>();
 		questionOption =  new HashMap<String,ArrayList<String>>();

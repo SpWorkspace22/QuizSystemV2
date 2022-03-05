@@ -18,11 +18,12 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import quizUtility.Faculty;
+import quizUtility.FileOperations;
 import quizUtility.Student;
-import quizUtility.User;
+
 import javax.swing.SwingConstants;
 
-
+// Main Home page from where flow will divide
 public class QuizMain extends JFrame  implements ActionListener{
 
 	private JPanel contentPane;
@@ -30,13 +31,10 @@ public class QuizMain extends JFrame  implements ActionListener{
 	private JComboBox departmnetChooser;
 	private JButton student;
 	private JButton faculty;
-
 	private Student stu;
 	private Faculty fac;
 	
-	/**
-	 * Launch the application.
-	 */
+	//Launching the main frame
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -50,11 +48,8 @@ public class QuizMain extends JFrame  implements ActionListener{
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+	//Configuring the screen
 	public QuizMain() {
-		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1116, 575);
@@ -64,7 +59,7 @@ public class QuizMain extends JFrame  implements ActionListener{
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		ImageIcon icon = new ImageIcon("src/icons/quiz-img.png");
+		ImageIcon icon = new ImageIcon("src/quiz/icons/quiz-img.png");
 		JLabel imageLabel = new JLabel(icon);
 		imageLabel.setBounds(0, 0, 521, 528);
 		contentPane.add(imageLabel);
@@ -101,7 +96,7 @@ public class QuizMain extends JFrame  implements ActionListener{
 		separator.setBounds(533, 260, 565, 16);
 		contentPane.add(separator);
 		
-		ImageIcon teacherIcon = new ImageIcon("src/icons/teacher.png");
+		ImageIcon teacherIcon = new ImageIcon("src/quiz/icons/teacher.png");
 		faculty = new JButton(teacherIcon);
 		faculty.setHorizontalAlignment(SwingConstants.LEFT);
 		faculty.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -111,7 +106,7 @@ public class QuizMain extends JFrame  implements ActionListener{
 		faculty.addActionListener(this);
 		contentPane.add(faculty);
 		
-		ImageIcon studentIcon = new ImageIcon("src/icons/reading.png");
+		ImageIcon studentIcon = new ImageIcon("src/quiz/icons/reading.png");
 		student = new JButton(studentIcon);
 		student.setHorizontalAlignment(SwingConstants.LEFT);
 		student.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -123,9 +118,10 @@ public class QuizMain extends JFrame  implements ActionListener{
 		
 	}
 
-	@Override
+	//Handling button operations
 	public void actionPerformed(ActionEvent e) {
-       if(e.getSource()==faculty) {
+      // Launching Faculty Screen 
+		if(e.getSource()==faculty) {
 
     	   if(checkUserName()) {
    			JOptionPane.showMessageDialog(null, "Please Enter User Name", "User Name Error", JOptionPane.ERROR_MESSAGE);
@@ -134,10 +130,10 @@ public class QuizMain extends JFrame  implements ActionListener{
     		   fac.initializeUser(departmnetChooser.getItemAt(departmnetChooser.getSelectedIndex()).toString(),
         			   userName.getText());
         	   this.setVisible(false);
-        	   new FacultyQuestionPaper(fac).setVisible(true);
+        	   new FacultyQuestionPaper(fac, new FileOperations()).setVisible(true);
     	   }
-       }else{
-
+		}else{
+		// Launching Student Screen
     	   if(checkUserName()) {
    			JOptionPane.showMessageDialog(null, "Please Enter User Name", "User Name Error", JOptionPane.ERROR_MESSAGE);
     	   }else {
@@ -150,6 +146,7 @@ public class QuizMain extends JFrame  implements ActionListener{
        }
 	}
 	
+	//Validating user name field
 	private boolean checkUserName() {
 		if(userName.getText().length()<=0) {
 			return true;

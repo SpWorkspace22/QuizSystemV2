@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Color;
 
+//Diplay the summary of quiz taken by student
 public class SummaryScreen extends JFrame {
 
 	private JPanel contentPane;

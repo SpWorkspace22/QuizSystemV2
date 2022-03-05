@@ -21,6 +21,7 @@ import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
 
+//List the name of papers available for the student selected department 
 public class StuentScreen extends JFrame implements ActionListener{
 
 	private JComboBox paperList;
@@ -88,7 +89,7 @@ public class StuentScreen extends JFrame implements ActionListener{
 		return guideline;
 	}
 
-	@Override
+	//Handling button actions
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		questionAnswer = fileOp.preparePapers(user.getDepartment(),

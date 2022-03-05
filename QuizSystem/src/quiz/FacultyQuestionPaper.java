@@ -9,34 +9,40 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import quizUtility.Faculty;
+import quizUtility.FileOperations;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
 
-public class FacultyQuestionPaper extends JFrame {
+public class FacultyQuestionPaper extends JFrame  implements ActionListener{
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
+	JTextArea question;
+	private JTextField optionA,optionB,optionC,optionD,answer;
+	private JButton submit,clear,addAndContinue,backToHome;
 
-
+	
 	private Faculty fac;
-	/**
-	 * Create the frame.
-	 */
-	public FacultyQuestionPaper(Faculty faculty) {
+	private FileOperations fileOperation;
+	private HashMap<String, ArrayList<String>> questionList;
+	
+	//Configuring screen elements 
+	public FacultyQuestionPaper(Faculty faculty, FileOperations file) {
 		this.fac =  faculty;
+		this.fileOperation = file;
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 987, 661);
 		contentPane = new JPanel();
@@ -48,7 +54,7 @@ public class FacultyQuestionPaper extends JFrame {
 		JLabel lblNewLabel = new JLabel("Hello "+fac.getUserName());
 		lblNewLabel.setForeground(new Color(0, 153, 153));
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
-		lblNewLabel.setBounds(12, 0, 945, 60);
+		lblNewLabel.setBounds(12, 0, 532, 60);
 		contentPane.add(lblNewLabel);
 		
 		JSeparator separator = new JSeparator();
@@ -75,32 +81,34 @@ public class FacultyQuestionPaper extends JFrame {
 		scrollPane.setBounds(12, 304, 935, 69);
 		contentPane.add(scrollPane);
 		
-		JTextArea textArea = new JTextArea();
-		scrollPane.setViewportView(textArea);
-		textArea.setLineWrap(true);
-		textArea.setText("");
-		textArea.setFont(new Font("Monospaced", Font.BOLD, 16));
-		
 		JLabel lblNewLabel_1_1 = new JLabel("Question");
 		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
 		lblNewLabel_1_1.setBounds(12, 267, 175, 36);
 		contentPane.add(lblNewLabel_1_1);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Tahoma", Font.BOLD, 14));
-		textField.setBounds(108, 402, 284, 22);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		question = new JTextArea();
+		scrollPane.setViewportView(question);
+		question.setLineWrap(true);
+		question.setText("");
+		question.setFont(new Font("Monospaced", Font.BOLD, 16));
+		
+		
+		optionA = new JTextField();
+		optionA.setFont(new Font("Tahoma", Font.BOLD, 14));
+		optionA.setBounds(108, 402, 284, 22);
+		contentPane.add(optionA);
+		optionA.setColumns(10);
 		
 		JLabel lblNewLabel_2 = new JLabel("Option A");
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblNewLabel_2.setBounds(12, 404, 96, 16);
 		contentPane.add(lblNewLabel_2);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(575, 403, 324, 22);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
+		optionB = new JTextField();
+		optionB.setFont(new Font("Tahoma", Font.BOLD, 14));
+		optionB.setBounds(575, 403, 324, 22);
+		contentPane.add(optionB);
+		optionB.setColumns(10);
 		
 		JLabel lblNewLabel_2_1 = new JLabel("Option B");
 		lblNewLabel_2_1.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -117,50 +125,113 @@ public class FacultyQuestionPaper extends JFrame {
 		lblNewLabel_2_3.setBounds(448, 466, 96, 16);
 		contentPane.add(lblNewLabel_2_3);
 		
-		textField_2 = new JTextField();
-		textField_2.setFont(new Font("Tahoma", Font.BOLD, 14));
-		textField_2.setColumns(10);
-		textField_2.setBounds(108, 464, 284, 22);
-		contentPane.add(textField_2);
+		optionC = new JTextField();
+		optionC.setFont(new Font("Tahoma", Font.BOLD, 14));
+		optionC.setColumns(10);
+		optionC.setBounds(108, 464, 284, 22);
+		contentPane.add(optionC);
 		
-		textField_3 = new JTextField();
-		textField_3.setFont(new Font("Tahoma", Font.BOLD, 14));
-		textField_3.setColumns(10);
-		textField_3.setBounds(575, 463, 324, 22);
-		contentPane.add(textField_3);
+		optionD = new JTextField();
+		optionD.setFont(new Font("Tahoma", Font.BOLD, 14));
+		optionD.setColumns(10);
+		optionD.setBounds(575, 463, 324, 22);
+		contentPane.add(optionD);
 		
-		textField_4 = new JTextField();
-		textField_4.setFont(new Font("Tahoma", Font.BOLD, 14));
-		textField_4.setColumns(10);
-		textField_4.setBounds(108, 524, 284, 22);
-		contentPane.add(textField_4);
+		answer = new JTextField();
+		answer.setFont(new Font("Tahoma", Font.BOLD, 14));
+		answer.setColumns(10);
+		answer.setBounds(108, 524, 284, 22);
+		contentPane.add(answer);
 		
 		JLabel lblNewLabel_2_2_1 = new JLabel("Answer");
 		lblNewLabel_2_2_1.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblNewLabel_2_2_1.setBounds(12, 527, 82, 16);
 		contentPane.add(lblNewLabel_2_2_1);
 		
-		JButton btnNewButton = new JButton("Submit");
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnNewButton.setBounds(794, 576, 175, 25);
-		contentPane.add(btnNewButton);
+		submit = new JButton("Submit");
+		submit.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
+		submit.setBounds(794, 576, 175, 25);
+		submit.setEnabled(false);
+		submit.addActionListener(this);
+		contentPane.add(submit);
 		
-		JButton btnNewButton_1 = new JButton("Clear");
-		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnNewButton_1.setBounds(605, 576, 175, 25);
-		contentPane.add(btnNewButton_1);
+		clear = new JButton("Clear");
+		clear.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
+		clear.setBounds(605, 576, 175, 25);
+		clear.addActionListener(this);
+		contentPane.add(clear);
 		
-		JButton btnNewButton_2 = new JButton("Add & Continue");
-		btnNewButton_2.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
-		btnNewButton_2.setBounds(403, 576, 184, 25);
-		contentPane.add(btnNewButton_2);
+		addAndContinue = new JButton("Add & Continue");
+		addAndContinue.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
+		addAndContinue.setBounds(403, 576, 184, 25);
+		addAndContinue.addActionListener(this);
+		contentPane.add(addAndContinue);
+		
+		backToHome = new JButton("Back");
+		backToHome.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
+		backToHome.setBounds(823, 17, 134, 32);
+		backToHome.addActionListener(this);
+		contentPane.add(backToHome);
+		
+		questionList = new HashMap<String, ArrayList<String>>();
+	}
+	
+
+	//Handling buttion oprtaions
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource()==addAndContinue) {
+			if(!isEmpty()) {
+				addQuestioninList();
+				clearFields();
+				submit.setEnabled(true);
+			}else {
+				System.out.println("In addAndContinue");
+				JOptionPane.showMessageDialog(this, "please fill all options.");
+			}
+		}else if(e.getSource()==clear) {
+			clearFields();
+		}else if(e.getSource()==submit){
+			String paperTitle = JOptionPane.showInputDialog("Enter Paper Title");
+			fileOperation.makeQuestionPaper(questionList, fac.getDepartment(), paperTitle);
+		}else {
+			this.setVisible(false);
+			new QuizMain().setVisible(true);
+		}
+	}
+	
+	//Adding question to temporary List
+	public void addQuestioninList() {
+		ArrayList<String> optionList = new ArrayList<String>();
+		
+		optionList.add(optionA.getText());
+		optionList.add(optionB.getText());
+		optionList.add(optionC.getText());
+		optionList.add(optionD.getText());
+		optionList.add(answer.getText());
+		
+		questionList.put(question.getText(), optionList);
+		
+	}
+	
+	//Clearing all text fields
+	private void clearFields() {
+		question.setText("");
+		optionA.setText("");
+		optionB.setText("");
+		optionC.setText("");
+		optionD.setText("");
+		answer.setText("");
+	}
+	
+	//Validating if any fields is empty
+	private boolean isEmpty() {
+		if((question.getText().length() < 1) || (optionA.getText().length() < 1) || (optionB.getText().length() < 1) 
+				|| (optionC.getText().length() < 1) || (optionD.getText().length() < 1) 
+				|| (answer.getText().length() < 1)) {
+			
+			return true;
+		}else {
+			return false;
+		}
 	}
 }

@@ -19,7 +19,7 @@ import javax.swing.border.EmptyBorder;
 
 import quizUtility.QuestionAnswer;
 import quizUtility.Student;
-
+// Quiz page will list the questions of the paper student has selected
 public class QuizPage extends JFrame implements ActionListener{
 
 	private JPanel contentPane;
@@ -36,17 +36,15 @@ public class QuizPage extends JFrame implements ActionListener{
 	private ButtonGroup btnGroup;
 	
 	
-	private QuestionAnswer questionAnswers;
-	private Student user;
+	private quizUtility.QuestionAnswer questionAnswers;
+	private quizUtility.Student user;
 
 	private Object questionList[];
 	private ArrayList<String> optionList;
 	private HashMap<String,String> userResponse;
 	private int questionCounter;
-	/**
-	 * 
-	 * Create the frame.
-	 */
+
+	//Configuaring Screen elements
 	public QuizPage(QuestionAnswer questionAnswers, Student user) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1114, 543);
@@ -110,16 +108,20 @@ public class QuizPage extends JFrame implements ActionListener{
 		contentPane.add(submitTest);
 	
 		
+		//initilizig questionAnswer Object to get option list of selected question ans 
+		// perform check answer
 		this.questionAnswers = questionAnswers;
 		this.user = user;
+		// List to store all user answers
 		userResponse = new HashMap<String, String>();
 		
 		questionList = null;
-		questionCounter = 0;
+		questionCounter = 0;   //counter to get next question from array
 		
 		initDataAndScreen();
 	}
 	
+	// Displaying first question from list by default
 	private void initDataAndScreen() {
 		headLabel.setText("Welcome "+user.getUserName()+" !!!");
 		
@@ -142,9 +144,15 @@ public class QuizPage extends JFrame implements ActionListener{
 		optionD.setText(optionList.get(3));
 		optionD.setActionCommand(optionList.get(3));
 		
-		questionCounter++;
+		//if the current question is last then  disable the next button
+		if(questionCounter==(questionList.length-1)) {
+			nextQuestion.setEnabled(false);
+		}else {
+			questionCounter++;
+		}
 	}
 
+	//Displaying next question from list if any by moving counter
 	private void setNextQuestion() {
 		
 			optionList.clear();
@@ -160,14 +168,15 @@ public class QuizPage extends JFrame implements ActionListener{
 			optionD.setText(optionList.get(3));
 			optionD.setActionCommand(optionList.get(3));
 			
-
+			//if the current question is last then  disable the next button
 			if(questionCounter==(questionList.length-1)) {
 				nextQuestion.setEnabled(false);
 			}
+
 	}
 	
 
-	@Override
+	//Handling button actions
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource() ==nextQuestion) {
@@ -179,7 +188,6 @@ public class QuizPage extends JFrame implements ActionListener{
 				userResponse.put(questionLabel.getText(),"");
 			}finally {
 				setNextQuestion();
-				questionCounter++;
 			}
 		}else {
 		    userResponse.put(questionLabel.getText(),btnGroup.getSelection().getActionCommand());
