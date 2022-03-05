@@ -25,11 +25,13 @@ import javax.swing.JSeparator;
 public class StuentScreen extends JFrame implements ActionListener{
 
 	private JComboBox paperList;
+	private JButton back;
 	
 	private JPanel contentPane;
     private Student user;
     private FileOperations fileOp;
     private QuestionAnswer questionAnswer;
+    
 	/**
 	 * Create the frame.
 	 */
@@ -48,7 +50,7 @@ public class StuentScreen extends JFrame implements ActionListener{
 		JLabel userNameLabel = new JLabel("Welcome "+user.getUserName()+" !!!!");
 		userNameLabel.setFont(new Font("Trebuchet MS", Font.BOLD | Font.ITALIC, 32));
 		userNameLabel.setForeground(new Color(169, 169, 169));
-		userNameLabel.setBounds(0, 0, 1098, 64);
+		userNameLabel.setBounds(12, 0, 847, 64);
 		contentPane.add(userNameLabel);
 		
 		JLabel papaerListLabel = new JLabel("Please Select the Test");
@@ -81,6 +83,12 @@ public class StuentScreen extends JFrame implements ActionListener{
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setBounds(12, 289, 1074, 15);
 		contentPane.add(separator_1);
+		
+		back = new JButton("Back");
+		back.setFont(new Font("Tahoma", Font.BOLD, 16));
+		back.setBounds(859, 26, 208, 25);
+		back.addActionListener(this);
+		contentPane.add(back);
 	}
 	
 	private String guidelies() {
@@ -92,12 +100,15 @@ public class StuentScreen extends JFrame implements ActionListener{
 	//Handling button actions
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
-		questionAnswer = fileOp.preparePapers(user.getDepartment(),
+		if(arg0.getSource()==back) {
+			 this.setVisible(false);
+			 new QuizMain().setVisible(true);
+		}else {
+			questionAnswer = fileOp.preparePapers(user.getDepartment(),
 				paperList.getItemAt(paperList.getSelectedIndex()).toString());
 		
-		this.setVisible(false);
-		new QuizPage(questionAnswer,user).setVisible(true);
-		
+			this.setVisible(false);
+			new QuizPage(questionAnswer,user).setVisible(true);
+		}
 	}
-
 }

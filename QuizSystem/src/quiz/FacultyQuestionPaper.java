@@ -191,8 +191,17 @@ public class FacultyQuestionPaper extends JFrame  implements ActionListener{
 		}else if(e.getSource()==clear) {
 			clearFields();
 		}else if(e.getSource()==submit){
-			String paperTitle = JOptionPane.showInputDialog("Enter Paper Title");
-			fileOperation.makeQuestionPaper(questionList, fac.getDepartment(), paperTitle);
+			String paperTitle = null;
+			
+			while(paperTitle==null) {
+				paperTitle = JOptionPane.showInputDialog(this,"Enter Paper Title");
+			}
+			
+			if(fileOperation.makeQuestionPaper(questionList, fac.getDepartment(), paperTitle)) {
+				JOptionPane.showMessageDialog(this,"Paper Saved...","Status", JOptionPane.INFORMATION_MESSAGE);
+			}else {
+				JOptionPane.showMessageDialog(this,"Paper with provided names exist..","Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}else {
 			this.setVisible(false);
 			new QuizMain().setVisible(true);

@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -34,6 +35,7 @@ public class QuizMain extends JFrame  implements ActionListener{
 	private Student stu;
 	private Faculty fac;
 	
+	private String departmentList[];
 	//Launching the main frame
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -50,6 +52,8 @@ public class QuizMain extends JFrame  implements ActionListener{
 
 	//Configuring the screen
 	public QuizMain() {
+		
+		departmentList = new String[] {"MCA","BTECH","ENTC"};
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1116, 575);
@@ -74,7 +78,6 @@ public class QuizMain extends JFrame  implements ActionListener{
 		departmentLabel.setBounds(545, 93, 148, 16);
 		contentPane.add(departmentLabel);
 		
-		String departmentList[] = {"MCA"};
 		
 		departmnetChooser = new JComboBox(departmentList);
 		departmnetChooser.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -116,6 +119,7 @@ public class QuizMain extends JFrame  implements ActionListener{
 		student.addActionListener(this);
 		contentPane.add(student);
 		
+		initiateProjectDirectory();
 	}
 
 	//Handling button operations
@@ -146,6 +150,49 @@ public class QuizMain extends JFrame  implements ActionListener{
        }
 	}
 	
+	// initiate the directiry structure depending on the drive present
+	private void initiateProjectDirectory() {
+		File f = null;
+		String path = null;
+		if(new File("D:/").exists()) {
+			path = "D:/QuizSystem";
+			subDirectoryCreate(path);
+		}else if(new File("F:/").exists()) {
+			path = "F:/QuizSystem";
+			subDirectoryCreate(path);
+		}else {
+			path = "E:/QuizSystem";
+			subDirectoryCreate(path);
+		}
+	}
+	
+	// Create a sub folders  for different department
+	private void subDirectoryCreate(String path) {
+		File f = new File(path);
+		if(!f.exists()) {
+			f.mkdirs();
+			FileOperations.mainDir=path;
+		}
+		
+		FileOperations.mainDir=path;
+		
+		String[] fileList = f.list();
+		
+		if(fileList.length<1) {
+			for(int i = 0; i<departmentList.length; i++) {
+				new File(path+"/"+departmentList[i]).mkdir();
+			}
+		}else {
+			for(int i = 0; i<departmentList.length; i++) {
+				for(int j  = 0; j<fileList.length; j++) {
+					if(!departmentList[i].equalsIgnoreCase(fileList[j])) {
+						new File(path+"/"+departmentList[i]).mkdir();
+					}
+					break;
+				}
+			}
+		}
+	}
 	//Validating user name field
 	private boolean checkUserName() {
 		if(userName.getText().length()<=0) {

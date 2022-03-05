@@ -11,12 +11,11 @@ import java.util.Scanner;
 
 public class FileOperations {
 
-	private String mainDir=null;
+	public static String mainDir=null;
 	private String department=null;
 	private QuestionAnswer questionAnswer;
 	
 	public FileOperations() {
-		mainDir = "F:/QuizSystem";
 		
 	}
 	
@@ -50,8 +49,7 @@ public class FileOperations {
 		String question = null;
 		String line =null;
 		questionAnswer = new QuestionAnswer();
-		
-		
+			
 		try {
 			Scanner sc = new Scanner(f);
 			while(sc.hasNextLine()) {
@@ -83,47 +81,52 @@ public class FileOperations {
 		return questionAnswer;
 	}
 	
-	public void makeQuestionPaper(HashMap<String, ArrayList<String>> questionList, String departmentDir, String paperTitle) {
-		String path = mainDir+"/"+departmentDir+"/"+paperTitle+".txt";
+	public boolean makeQuestionPaper(HashMap<String, ArrayList<String>> questionList, String departmentDir, String paperTitle) {
+		boolean result = false;
 		
+		String path = mainDir+"/"+departmentDir+"/"+paperTitle+".txt";
+	
 		File f = new File(path);
-		FileWriter fw = null;
-		try {
-			fw = new FileWriter(f);
-			
-			for(Map.Entry<String, ArrayList<String>> questions : questionList.entrySet()) {
-				String question = questions.getKey();
-				ArrayList optionList = questions.getValue();
+		if(!f.exists()) {
+			FileWriter fw = null;
+			try {
+				fw = new FileWriter(f);
 				
-				fw.write("<QB>\n");
-				fw.write(question+"\n");
-				fw.write("<QE>\n");
-				
-				fw.write("<OB>\n");
-				fw.write(optionList.get(0).toString()+"\n");
-				fw.write(optionList.get(1).toString()+"\n");
-				fw.write(optionList.get(2).toString()+"\n");
-				fw.write(optionList.get(3).toString()+"\n");
-				fw.write("<OE>\n");
-				
-				fw.write("<AB>\n");
-				fw.write(optionList.get(4).toString()+"\n");
-				fw.write("<AE>\n");
-				fw.close();
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			if(fw!=null) {
-				try {
+				for(Map.Entry<String, ArrayList<String>> questions : questionList.entrySet()) {
+					String question = questions.getKey();
+					ArrayList optionList = questions.getValue();
+					
+					fw.write("<QB>\n");
+					fw.write(question+"\n");
+					fw.write("<QE>\n");
+					
+					fw.write("<OB>\n");
+					fw.write(optionList.get(0).toString()+"\n");
+					fw.write(optionList.get(1).toString()+"\n");
+					fw.write(optionList.get(2).toString()+"\n");
+					fw.write(optionList.get(3).toString()+"\n");
+					fw.write("<OE>\n");
+					
+					fw.write("<AB>\n");
+					fw.write(optionList.get(4).toString()+"\n");
+					fw.write("<AE>\n");
 					fw.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				if(fw!=null) {
+					try {
+						fw.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
+			result = true;
 		}
-		
+           return result;
 	}
 }
